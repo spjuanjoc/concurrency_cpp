@@ -11,7 +11,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cd08dd2-c60b-4761-b5af-a42664e5dd09" name="Default Changelist" comment="" />
+    <list default="true" id="1cd08dd2-c60b-4761-b5af-a42664e5dd09" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,8 +42,9 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../async3/CMakeLists.txt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/CMakeLists.txt" />
   </component>
   <component name="RunManager">
     <configuration name="async2" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="async2" TARGET_NAME="async2" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="async2" RUN_TARGET_NAME="async2">
@@ -73,6 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1576252855340</updated>
       <workItem from="1576252856488" duration="843000" />
+      <workItem from="1576253937490" duration="5000" />
     </task>
     <servers />
   </component>
@@ -80,6 +84,14 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="74" y="64" width="1748" height="991" key="CommitChangelistDialog2" timestamp="1576254073496">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="74" y="64" width="1748" height="991" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1576254073496" />
+    <state x="175" y="123" width="1536" height="872" key="DiffContextDialog" timestamp="1576254052308">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="175" y="123" width="1536" height="872" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1576254052308" />
     <state x="743" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576253696766">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
