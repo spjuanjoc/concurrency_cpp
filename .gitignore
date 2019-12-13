@@ -32,4 +32,4 @@
 *.app
 
 # build folders
-/cmake-build-*
+*cmake-build-*
