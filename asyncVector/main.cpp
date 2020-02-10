@@ -103,7 +103,7 @@ void spawnAsync(const int& n, std::ifstream& file)
 
 int main(int argc, char* argv[])
 {
-	std::cout << "Hello world" << std::endl;
+    std::cout << "Hello world" << std::endl;
     std::ifstream inputFile;
     inputFile.open("../input.txt");
     std::vector<char> vec {};
