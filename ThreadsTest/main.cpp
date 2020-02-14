@@ -35,6 +35,7 @@ std::string getThreadName(const std::thread::id& tid)
         std::stringstream ss;
         ss << tid;
         result = ss.str();
+        result = result.substr( result.length()-4);
     }
     return result;
 }
@@ -59,11 +60,10 @@ int main()
 //    cout << "Locale: " << std::locale("ES").name().c_str() << endl;
 
     thread first(foo);//inicia hilo que llama a foo()
-    setThreadName(first.get_id(), "foo");
-
+//    setThreadName(first.get_id(), "foo");
 
     thread second(bar, 0); //inicia hilo que llama a bar(0)
-    setThreadName(second.get_id(), "bar");
+//    setThreadName(second.get_id(), "bar");
 
     cout << "La ejecución concurrente de las funciones foo y bar va a comenzar " << endl;
 
