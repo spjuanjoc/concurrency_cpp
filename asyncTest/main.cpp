@@ -1,73 +1,91 @@
+#include "fmt/ostream.h"
+#include <fmt/core.h>
 #include <chrono>
 #include <future>
 #include <iostream>
 
-//using namespace std::chrono_literals;
-std::promise<void> runnerTimeout;
+using namespace std::chrono_literals;
+std::promise<void> runner_timeout;
+
 void firstTask()
 {
-    std::cout << "First message before sleep." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(15));
-    std::cout << "Second message after sleep." << std::endl;
+  constexpr auto sleep_time = 5s;
+  fmt::print("First message, before sleep {}s {:^4} tid:{:<5}\n",
+             sleep_time.count(),
+             "",
+             std::this_thread::get_id());
+  std::this_thread::sleep_for(sleep_time);
+  fmt::print("Second message, after sleep {}s {:^4} tid:{}\n",
+             sleep_time.count(),
+             "",
+             std::this_thread::get_id());
 }
+
 void called_from_async(std::promise<void> started)
 {
-    std::cout << "Third message Async call" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(20));
-//    auto abortValue = runnerTimeout.get_future();
-//    started.set_value();
-//    bool needToContinue{true};
-//    while(needToContinue)
-//    {
-//        if(abortValue.wait_for(std::chrono::seconds(5)) == std::future_status::timeout)
-//        {
-//            std::cout << "inside wait for" << std::endl;
-//            needToContinue = false;
-//        }
-//        else
-//        {
-//            std::cout << "outside wait for" << std::endl;
-//        }
-//    }
+  constexpr auto sleep_time = 5s;
+  constexpr auto timeout    = 5s;
+  bool           needs_to_continue{true};
+
+  fmt::print("Third message, before async call {}s tid:{}\n",
+             sleep_time.count(),
+             std::this_thread::get_id());
+  std::this_thread::sleep_for(sleep_time);
+
+  auto abort_value = runner_timeout.get_future();
+  started.set_value();
+
+  while (needs_to_continue)
+  {
+    if (abort_value.wait_for(timeout) == std::future_status::ready)
+    {
+      fmt::print("future ready\n");
+      std::this_thread::sleep_for(sleep_time);
+      needs_to_continue = false;
+    }
+    else if (abort_value.wait_for(timeout) == std::future_status::timeout)
+    {
+      fmt::print("future timed out\n");
+      std::this_thread::sleep_for(sleep_time);
+      needs_to_continue = false;
+    }
+    else
+    {
+      fmt::print("not ready nor timed out\n");
+      std::this_thread::sleep_for(sleep_time);
+    }
+  }
 }
 
 int main()
 {
-    //called_from_async launched in a separate thread if possible
-    std::promise<void> runnerStarted;
-    auto runnerValue = runnerStarted.get_future();
-    std::future<void> result;
-    result = std::async(
-                 std::launch::async,
-                 called_from_async,
-                 move(runnerStarted));
-////    firstTask();
-//    std::cout << "after async" << std::endl;
-//    runnerTimeout.set_value();
-//    std::cout << "after set_value" << std::endl;
-    //ensure that called_from_async is launched synchronously if it wasn't already launched
-    auto timeout = std::chrono::seconds(5);
+  //called_from_async launched in a separate thread if possible
+  std::promise<void> runnerStarted;
+  auto               runnerValue = runnerStarted.get_future();
+  std::future<void>  result;
+  result = std::async(std::launch::async, called_from_async, move(runnerStarted));
 
-//    while(result.valid() )
-//    {
-    if(result.valid() )
+  firstTask();
+  fmt::print("after async\n");
+  runner_timeout.set_value();
+  fmt::print("after set_value\n");
+  //ensure that called_from_async is launched synchronously if it wasn't already launched
+  constexpr auto timeout = 25s;
+
+  if (result.valid())  //    while (result.valid())
+  {
+    if (result.wait_for(timeout) == std::future_status::ready)
     {
-        if(result.wait_for(timeout) == std::future_status::ready)
-        {
-            std::cout << "ready" << std::endl;
-        }
-
-        if(result.wait_for(timeout) == std::future_status::timeout)
-        {
-            std::cout << "timeout" << std::endl;
-            //
-        }
-        else
-        {
-            std::cout << "Task done" << std::endl;
-        }
+      fmt::print("async ready\n");
     }
-
-//    }
-    return 0;
+    else if (result.wait_for(timeout) == std::future_status::timeout)
+    {
+      fmt::print("async timed out\n");
+    }
+    else
+    {
+      fmt::print("async task done\n");
+    }
+  }
+  return 0;
 }
