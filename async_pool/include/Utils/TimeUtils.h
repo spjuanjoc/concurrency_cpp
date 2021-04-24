@@ -16,7 +16,7 @@ using std::chrono::time_point;
 
 using namespace std::chrono_literals;
 
-using high_res_time_point = time_point<system_clock, duration<uint64_t, std::ratio<1, 1000000000>>>;
+using high_res_time_point = time_point<system_clock, duration<uint64_t, std::nano>>;
 
 namespace Utils
 {
