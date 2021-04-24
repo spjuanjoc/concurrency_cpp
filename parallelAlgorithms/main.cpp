@@ -1,6 +1,5 @@
 #include "fmt/core.h"
 #include <algorithm>
-#include <iostream>
 #include <list>
 #include <mutex>
 #include <numeric>
@@ -24,8 +23,7 @@ int main()
 {
   fmt::print("Hello, Concurrency!\n");
 
-  //    std::vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-  std::vector<double> v(6000000, 0.5);
+  std::vector<double> v(6'000'000, 0.5);
 
   auto acc_l = [&v] { return std::accumulate(v.begin(), v.end(), 0.0); };
   runAndMeasure("std::accumulate", acc_l);
@@ -36,6 +34,13 @@ int main()
     return res == std::end(v) ? 0.0 : 1.0;
   };
   runAndMeasure("std::find", find_l);
+
+  auto find_l_2 = [&v]
+  {
+    auto res = std::find(v.begin(), v.end(), 0.5);
+    return res == std::end(v) ? 0.0 : 1.0;
+  };
+  runAndMeasure("std::find", find_l_2);
 
   return 0;
 }
