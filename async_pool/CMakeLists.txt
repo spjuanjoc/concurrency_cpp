@@ -4,7 +4,6 @@ project(async_pool)
 option(ENABLE_TESTS "Enable tests" FALSE)
 
 add_executable(${PROJECT_NAME}
-    src/AsyncPool.cpp
     src/main.cpp)
 
 set(PROJECT_OPTIONS
