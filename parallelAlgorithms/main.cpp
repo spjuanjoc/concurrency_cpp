@@ -1,3 +1,4 @@
+#include "fmt/core.h"
 #include <algorithm>
 #include <iostream>
 #include <list>
@@ -6,29 +7,35 @@
 #include <vector>
 
 template<typename TFunc>
-void RunAndMeasure( const char* title, TFunc func )
+void runAndMeasure(std::string_view title, TFunc func)
 {
-    const auto start = std::chrono::steady_clock::now();
-    auto       ret   = func();
-    const auto end   = std::chrono::steady_clock::now();
-    std::cout << title
-              << " time: " << std::chrono::duration<double, std::milli>( end - start ).count()
-              << " ms, result: " << ret << "\n";
+  using std::chrono::duration;
+  using std::chrono::high_resolution_clock;
+  using dur_ratio = std::milli;
+
+  const auto start   = high_resolution_clock::now();
+  auto       function_return = func();
+  const auto end     = high_resolution_clock::now();
+  const auto elapsed = duration<double, dur_ratio>(end - start);
+  fmt::print("{} : time: {} ms, result: {} \n", title, elapsed.count(), function_return);
 }
 
 int main()
 {
-    std::cout << "Hello, Concurrency!" << std::endl;
+  fmt::print("Hello, Concurrency!\n");
 
-    //    std::vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    std::vector<double> v( 6000000, 0.5 );
+  //    std::vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  std::vector<double> v(6000000, 0.5);
 
-    RunAndMeasure( "std::accumulate", [&v] { return std::accumulate( v.begin(), v.end(), 0.0 ); } );
+  auto acc_l = [&v] { return std::accumulate(v.begin(), v.end(), 0.0); };
+  runAndMeasure("std::accumulate", acc_l);
 
-    RunAndMeasure( "std::find", [&v] {
-        auto res = std::find( v.begin(), v.end(), 0.6 );
-        return res == std::end( v ) ? 0.0 : 1.0;
-    } );
+  auto find_l = [&v]
+  {
+    auto res = std::find(v.begin(), v.end(), 0.6);
+    return res == std::end(v) ? 0.0 : 1.0;
+  };
+  runAndMeasure("std::find", find_l);
 
-    return 0;
+  return 0;
 }
