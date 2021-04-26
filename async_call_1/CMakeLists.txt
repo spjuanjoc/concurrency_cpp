@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(asyncTest)
+project(async_call_1)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
