@@ -1,0 +1,4 @@
+read digits like 1234 only, skip text and spaces
+read digits like 4321 only, skip text and spaces
+read digits like 1234 only, skip text and spaces
+read digits like 4321 only, skip text and spaces

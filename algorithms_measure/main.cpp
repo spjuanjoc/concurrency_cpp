@@ -2,14 +2,12 @@
 #include "Utils.hpp"
 #include <algorithm>
 #include <list>
-#include <mutex>
 #include <numeric>
 #include <vector>
 
-
 int main()
 {
-  fmt::print("Hello, Concurrency!\n");
+  fmt::print("Measure algorithms elapsed time\n");
 
   std::vector<double> v(6'000'000, 0.5);
 
