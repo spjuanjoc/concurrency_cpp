@@ -42,10 +42,11 @@ std::string getThreadName(const std::thread::id& tid)
   }
   else
   {
-    std::stringstream ss;
-    ss << tid;
-    result = ss.str();
-    result = result.substr(result.length() - 5);
+//    std::stringstream ss;
+//    ss << tid;
+//    result = ss.str();
+    auto stid = fmt::format("{}", tid);
+    result = stid.substr(stid.length() - 5);
   }
   return result;
 }
@@ -70,7 +71,7 @@ int main()
   {
     // inicia hilo que llama a foo()
     thread first(foo);
-    setThreadName(first.get_id(), "foo");
+    setThreadName(first.get_id(), "hilo foo");
 
     // inicia hilo que llama a bar(0)
     thread second(bar, 0);
@@ -93,5 +94,6 @@ int main()
   {
     fmt::print("{} : {}\n", it.first, it.second);
   }
+
   return 0;
 }
