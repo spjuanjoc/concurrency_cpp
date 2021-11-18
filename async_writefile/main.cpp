@@ -1,5 +1,6 @@
 #include "fmt/core.h"
 #include "fmt/ostream.h"  // for << std::thread::get_id()
+
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -20,7 +21,7 @@ void writeFile(const std::string& s)
   std::lock_guard lock(g_mutex);
 
   fmt::print("do sequential work\n");
-  std::ofstream out_file{"../output.txt", std::ios::app};
+  std::ofstream out_file{"output.txt", std::ios::app};
 
   if (out_file)
   {
@@ -109,7 +110,7 @@ int main(/*int argc, char* argv[]*/)
   fmt::print("Async write file, read from a file and order its chars\n");
 
   std::ifstream input_file;
-  input_file.open("../input.txt");
+  input_file.open("input.txt");
   const auto number_of_threads = std::thread::hardware_concurrency() - 1;
 
   if (input_file)

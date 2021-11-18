@@ -8,6 +8,7 @@
 #include <thread>
 #include <vector>
 
+using std::cout;
 using namespace std::literals::chrono_literals;
 
 void readNumbers(const std::string& line)
@@ -21,7 +22,7 @@ void readNumbers(const std::string& line)
       cout << c;
     }
   }
-  cout << endl;
+  cout << std::endl;
 }
 
 int main()
@@ -29,7 +30,7 @@ int main()
   fmt::print("Read from a file and print only the numbers\n");
 
   std::ifstream inputFile;
-  inputFile.open("../input.txt");
+  inputFile.open("input.txt");
 
   if (inputFile)
   {
