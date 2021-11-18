@@ -1,7 +1,6 @@
 set(TEST_NAME ${PROJECT_NAME}_AllTests)
 
 add_definitions(-DGTEST_LANGUAGE_CXX11)
-enable_testing()
 
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false test.*.cpp)
 
@@ -12,7 +11,7 @@ if (Catch2_FOUND)
 endif ()
 
 add_executable(${TEST_NAME} ${TEST_SOURCES})
-add_test(${TEST_NAME} ${TEST_NAME})
+add_test(${TEST_NAME} ${TEST_NAME}) # for ctest
 
 target_link_libraries(${TEST_NAME} pthread fmt::fmt)
 target_compile_features(${TEST_NAME} PUBLIC cxx_std_17)
