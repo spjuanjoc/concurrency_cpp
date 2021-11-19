@@ -6,6 +6,7 @@ by passing a malicious function.
 
 Create a map of thread names to have named ids for each thread.
 
-Create a basic thread pool, then a waitable thread pool using a 
+Create a basic thread pool, then an awaitable thread pool using a 
 safe queue.
 
+Concurrency != parallelism
