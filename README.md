@@ -25,6 +25,7 @@ The libraries used include:
 ## Compile
 
 ```shell
+mkdir build && cd build
 cmake -DCMAKE_MODULE_PATH=$PWD -DCMAKE_BUILD_TYPE=Debug -G "Ninja" ..
 cmake --build .
 ```
