@@ -30,12 +30,36 @@
 *.exe
 *.out
 *.app
+*.bin
 
-# build folders
+
+# Build folders
 *cmake-build-*
+CMakeFiles/
+Makefile/
+build/
 
-output.txt
+
+# cmake files
+*.cmake
+
+# DEB packages
+*.deb
+
+# install manifest
+install_manifest*
 
 # IDE folders
+# Jetbrains
 .idea
+# Code::Blocks project files
+*.cbp
 
+# architecture precompiled file
+arch.c
+
+# Cmake swap
+/.CMakeLists.txt.swp
+
+# Testing folders
+Testing/
