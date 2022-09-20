@@ -1,32 +1,49 @@
-#include "fmt/core.h"
-#include "Utils.hpp"
-#include <algorithm>
+/**
+ * @brief Measure the elapsed time of callables using decorators.
+ *
+ * @author spjuanjoc
+ * @date   2020-01-24
+ */
+
+#include <fmt/core.h>
+
+#include "TimeMeasure.hpp"
+
 #include <list>
 #include <numeric>
 #include <vector>
 
-int main()
+using namespace TimeMeasure;
+
+int
+main()
 {
   fmt::print("Measure algorithms elapsed time\n");
 
-  std::vector<double> v(6'000'000, 0.5);
+  std::vector<double> values(6'000'000, 0.5);
 
-  auto acc_l = [&v] { return std::accumulate(v.begin(), v.end(), 0.0); };
-  measure("std::accumulate", acc_l)();
-
-  auto find_l = [&v]
+  auto measureAccumulate = [&values]
   {
-    auto res = std::find(v.begin(), v.end(), 0.6);
-    return res == std::end(v) ? 0.0 : 1.0;
+    const auto initial_value = 0.0;
+    return std::accumulate(values.begin(), values.end(), initial_value);
   };
-  measure("std::find", find_l)();
+  measure("std::accumulate", measureAccumulate)();
 
-  auto find_l_2 = [&v]
+  auto wasFound = [&values](double value)
   {
-    auto res = std::find(v.begin(), v.end(), 0.5);
-    return res == std::end(v) ? 0.0 : 1.0;
+    const auto result = std::find(values.begin(), values.end(), value);
+
+    return !(result == std::end(values));
   };
-  runAndMeasure("std::find", find_l_2);
+
+  constexpr auto value_in_collection     = 0.5;
+  constexpr auto value_not_in_collection = 0.6;
+
+  auto wasFound1 = [&] { return wasFound(value_not_in_collection); };
+  auto wasFound2 = [&] { return wasFound(value_in_collection); };
+
+  measure("std::find", wasFound1)();
+  runAndMeasure("std::find", wasFound2);
 
   return 0;
 }

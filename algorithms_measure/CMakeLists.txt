@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 3.20)
-project(parallel_algorithms VERSION 0.0.2 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.19)
+project(algorithms_measure
+  VERSION "0.0.3"
+  DESCRIPTION "Examples for measure the time spent running std algorithms"
+  LANGUAGES CXX
+)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -21,6 +25,6 @@ find_package(fmt REQUIRED)
 
 ## Target
 target_link_libraries(${PROJECT_NAME} pthread fmt::fmt)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 #target_compile_options(${PROJECT_NAME} INTERFACE ${PROJECT_OPTIONS})
 target_include_directories(${PROJECT_NAME} PRIVATE include)
