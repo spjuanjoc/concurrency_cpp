@@ -9,58 +9,63 @@
 #define OBSERVABLE_H
 
 #include <fmt/core.h>
-#include <sigc++/sigc++.h>
+
 #include <thread>
+
+#include <sigc++/sigc++.h>
 
 namespace Observable
 {
 using namespace std::chrono_literals;
 
-template<typename T>
-struct SignalObservable
+constexpr std::chrono::milliseconds COMPUTING_SLEEP = 500ms;
+
+template <typename Type>
+class ObservableSignal
 {
-  sigc::signal<void(T&, const std::string&)> signalFieldChanged;
-  sigc::signal<void(T&, const std::string&)> signalFinished;
+public:
+  virtual ~ObservableSignal() = default;
+  sigc::signal<void(Type&, const std::string&)> signalFieldChanged;
+  sigc::signal<void(Type&, const std::string&)> signalFinished;
 };
 
-class NameProvider : public SignalObservable<NameProvider>
+class NameProvider : public ObservableSignal<NameProvider>
 {
 public:
   NameProvider() = default;
 
-  virtual ~NameProvider()
+  ~NameProvider() override
   {
     if (m_thread.joinable())
     {
+      fmt::print("join");
       m_thread.join();
     }
   }
 
-  void setValue(std::string_view value)
+  void setName(std::string_view value)
   {
-    m_value = value;
-    signalFieldChanged(*this, "setValue");
+    m_name = value;
+    signalFieldChanged(*this, "value");
     m_thread = std::thread(&NameProvider::compute, this);
   }
 
   void compute()
   {
     fmt::print("Computing...\n");
-    m_value = "new value";
-    std::this_thread::sleep_for(1s);
-    fmt::print("Done\n");
+    m_name = "Jane";
+    std::this_thread::sleep_for(COMPUTING_SLEEP);
+    fmt::print("Done computing\n");
     signalFinished(*this, "compute");
   }
 
-  std::string getValue() const
-  {
-    return m_value;
-  }
+  std::string getName() const { return m_name; }
 
 private:
-  std::string m_value;
+  std::string m_name;
   std::thread m_thread;
 };
+
 }  // namespace Observable
 
 #endif /* OBSERVABLE_H */
