@@ -1,8 +1,9 @@
 #include "AsyncPool.hpp"
-#include "fmt/core.h"
 #include "SimpleThreadPool.hpp"
+#include "Utils/TimeCount.h"
 #include "WaitableThreadPool.hpp"
-#include "Utils/TimeUtils.h"
+#include "fmt/core.h"
+
 #include <future>
 #include <iostream>
 #include <mutex>
@@ -34,20 +35,30 @@ using namespace Utils;
 //  pool.stop();
 //}
 
-void runSimpleThreadPool()
+void
+runSimpleThreadPool()
 {
   tpns::SimpleThreadPool pool1;
   tpns::SimpleThreadPool pool2;
 
   for (int i = 0; i < 10; ++i)
   {
-    pool1.addToQueue([i = i](){ fmt::print("Some work {}\n", i);});
-    pool2.addToQueue([i = i](){ fmt::print("Some other work {}\n", 10-i);});
+    pool1.addToQueue(
+      [i = i]()
+      {
+        fmt::print("Some work {}\n", i);
+      });
+    pool2.addToQueue(
+      [i = i]()
+      {
+        fmt::print("Some other work {}\n", 10 - i);
+      });
     std::this_thread::sleep_for(1s);
   }
 }
 
-void runWaitableThreadPool()
+void
+runWaitableThreadPool()
 {
   tpns::WaitableThreadPool pool3;
 
@@ -65,13 +76,14 @@ void runWaitableThreadPool()
   }
 }
 
-int main()
+int
+main()
 {
   const auto start       = count();
   const auto max_threads = std::thread::hardware_concurrency();
   fmt::print("Max threads supported {}\n", max_threads);
 
-//  runSimpleThreadPool();
+  //  runSimpleThreadPool();
   runWaitableThreadPool();
 
   const auto end = count();

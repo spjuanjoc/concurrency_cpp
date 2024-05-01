@@ -1,7 +1,7 @@
 /**
  * @brief
  *
- * @author  juan.castellanos
+ * @author  spjuanjoc
  * @date    2021-11-18
  */
 
@@ -20,7 +20,7 @@ main()
 {
   fmt::print(">>main\n");
   NameProvider provider;
-  std::string  computed_name{ "unknown" };
+  std::string  computed_name { "unknown" };
 
   auto onFieldChanged = provider.signalFieldChanged.connect(
     [](NameProvider& name_provider, const std::string& field_name)

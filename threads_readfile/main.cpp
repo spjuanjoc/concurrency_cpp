@@ -1,7 +1,6 @@
-#include "fmt/core.h"
+#include <fmt/core.h>
+
 #include <algorithm>
-#include <array>
-#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -11,7 +10,8 @@
 using std::cout;
 using namespace std::literals::chrono_literals;
 
-void readNumbers(const std::string& line)
+void
+readNumbers(const std::string& line)
 {
   std::vector<unsigned char> numbers;
 
@@ -25,7 +25,8 @@ void readNumbers(const std::string& line)
   cout << std::endl;
 }
 
-int main()
+int
+main()
 {
   fmt::print("Read from a file and print only the numbers\n");
 
@@ -34,7 +35,7 @@ int main()
 
   if (inputFile)
   {
-    std::string line{};
+    std::string line {};
 
     while (std::getline(inputFile, line))
     {

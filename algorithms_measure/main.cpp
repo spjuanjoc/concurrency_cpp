@@ -18,7 +18,9 @@ using namespace TimeMeasure;
 int
 main()
 {
-  fmt::print("Measure algorithms elapsed time\n");
+  fmt::println("Measure algorithms elapsed time");
+  fmt::println("|{:^15}|{:^10}|{:^10}|", "Algorithm", "Time (ms)", "Result");
+  fmt::println("{:-^39}","");
 
   std::vector<double> values(6'000'000, 0.5);
 
@@ -39,8 +41,14 @@ main()
   constexpr auto value_in_collection     = 0.5;
   constexpr auto value_not_in_collection = 0.6;
 
-  auto wasFound1 = [&] { return wasFound(value_not_in_collection); };
-  auto wasFound2 = [&] { return wasFound(value_in_collection); };
+  auto wasFound1 = [&]
+  {
+    return wasFound(value_not_in_collection);
+  };
+  auto wasFound2 = [&]
+  {
+    return wasFound(value_in_collection);
+  };
 
   measure("std::find", wasFound1)();
   runAndMeasure("std::find", wasFound2);

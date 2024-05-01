@@ -1,7 +1,5 @@
-#include "fmt/core.h"
-#include "fmt/ostream.h"  // for << std::thread::get_id()
+#include <fmt/std.h>  // for << std::thread::get_id()
 
-#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <future>
@@ -16,26 +14,29 @@ using namespace std::literals::chrono_literals;
 std::mutex               g_mutex;
 std::vector<std::string> g_ordered_lines;
 
-void writeFile(const std::string& s)
+void
+writeFile(const std::string& line)
 {
   std::lock_guard lock(g_mutex);
 
   fmt::print("do sequential work\n");
-  std::ofstream out_file{"output.txt", std::ios::app};
+  std::ofstream file_stream { "output.txt", std::ios::app };
 
-  if (out_file)
+  if (file_stream)
   {
-    for (const auto& it : s)
+    for (const auto& it : line)
     {
-      out_file << it;
+      file_stream << it;
     }
-    out_file << std::endl;
 
-    out_file.close();
+    file_stream << '\n';
+
+    file_stream.close();
   }
 }
 
-void saveValues(const std::string& file_line)
+void
+saveValues(const std::string& file_line)
 {
   std::lock_guard lock(g_mutex);
 
@@ -43,7 +44,8 @@ void saveValues(const std::string& file_line)
   g_ordered_lines.emplace_back(file_line);  // race condition if not sequential
 }
 
-void doAsyncWork(std::string file_line)
+void
+doAsyncWork(std::string file_line)
 {
   fmt::print("Doing async work\n");
 
@@ -72,15 +74,19 @@ void doAsyncWork(std::string file_line)
  * @param file
  * @param number_of_threads
  */
-void spawnAsync(std::ifstream& file, const std::uint32_t& number_of_threads)
+void
+spawnAsync(std::ifstream& file, const std::uint32_t& number_of_threads)
 {
   std::string                    line;
   std::vector<std::future<void>> futures;
   futures.reserve(number_of_threads);
 
-  auto lambda = [](std::string s) { doAsyncWork(std::move(s)); };
+  auto lambda = [](std::string s)
+  {
+    doAsyncWork(std::move(s));
+  };
 
-  for (int i = 1; i <= number_of_threads; ++i)
+  for (std::size_t i = 1; i <= number_of_threads; ++i)
   {
     if (!file.eof())
     {
@@ -93,14 +99,14 @@ void spawnAsync(std::ifstream& file, const std::uint32_t& number_of_threads)
   }
 
   //run them
-  auto startForRB{std::chrono::high_resolution_clock::now()};
+  auto startForRB { std::chrono::high_resolution_clock::now() };
   for (auto&& it : futures)
   {
     it.get();
   }
 
-  auto       endForRB{std::chrono::high_resolution_clock::now()};
-  auto       timeUsedRB{endForRB - startForRB};
+  auto       endForRB { std::chrono::high_resolution_clock::now() };
+  auto       timeUsedRB { endForRB - startForRB };
   const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(timeUsedRB).count();
   fmt::print("Elapsed: {} us\n", elapsed);
 }
@@ -109,29 +115,29 @@ int main(/*int argc, char* argv[]*/)
 {
   fmt::print("Async write file, read from a file and order its chars\n");
 
-  std::ifstream input_file;
-  input_file.open("input.txt");
-  const auto number_of_threads = std::thread::hardware_concurrency() - 1;
+  std::ifstream input_stream;
+  const auto    number_of_threads = std::thread::hardware_concurrency() - 1;
 
-  if (input_file)
+  input_stream.open("input.txt");
+
+  if (input_stream)
   {
-    std::string line;
-
-    while (!input_file.eof())
+    while (!input_stream.eof())
     {
-      spawnAsync(input_file, number_of_threads);
+      spawnAsync(input_stream, number_of_threads);
     }
-    input_file.close();
 
+    input_stream.close();
 
-    for (const auto& it : g_ordered_lines)
+    for (const auto& line : g_ordered_lines)
     {
-      writeFile(it);
+      writeFile(line);
     }
   }
   else
   {
-    std::cerr << "Error reading file" << std::endl;
+    std::cerr << "Error reading file\n";
+
     return 1;
   }
 

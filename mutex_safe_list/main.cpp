@@ -1,8 +1,10 @@
-#include "fmt/core.h"
+#include <fmt/core.h>
+
 #include "SafeList.hpp"
 #include "UnProtectedMutex.h"
 
-int main()
+int
+main()
 {
   fmt::print("Safe list using mutex\n");
 
@@ -24,7 +26,7 @@ int main()
 
   DataWrapper x;
   x.processData(maliciousFunction);  //Pass in a malicious function
-  unprotected_data->doSomething();    //Unprotected access to protected data
+  unprotected_data->doSomething();   //Unprotected access to protected data
 
   return 0;
 }

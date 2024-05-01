@@ -1,7 +1,12 @@
-//
-// Created by juan.castellanos on 22/04/21.
-//
-#pragma once
+/**
+ * @brief
+ *
+ * @author  spjuanjoc
+ * @date    2021-04-21
+ */
+
+#ifndef SIMPLE_THREADPOOL_H
+#define SIMPLE_THREADPOOL_H
 
 #include "ThreadPoolHelper.hpp"
 
@@ -11,7 +16,9 @@ namespace tpns
 class SimpleThreadPool
 {
 public:
-  SimpleThreadPool() : done_(false), joiner_(threads_)
+  SimpleThreadPool()
+  : done_(false)
+  , joiner_(threads_)
   {
     fmt::print("ctor\n");
     const std::uint32_t thread_count = std::max(2u, 1u);
@@ -38,7 +45,7 @@ public:
     done_ = true;
   }
 
-  template<typename FunctionType>
+  template <typename FunctionType>
   void addToQueue(FunctionType f)
   {
     fmt::print("Add to queue\n");
@@ -73,3 +80,5 @@ private:
 };
 
 }  // namespace tpns
+
+#endif  //SIMPLE_THREADPOOL_H

@@ -1,9 +1,11 @@
-#include "fmt/core.h"
+#include <fmt/core.h>
+
 #include <chrono>
 #include <future>
 #include <vector>
 
-void doAsyncWork()
+void
+doAsyncWork()
 {
   fmt::print("Doing async work\n");
 }
@@ -11,33 +13,33 @@ void doAsyncWork()
 /**
  * Spawns number_of_threads threads
  */
-void spawnAsync(int number_of_threads)
+void
+spawnAsync(std::uint32_t number_of_threads)
 {
-  auto lambda = [=]() { doAsyncWork(); };
-
   std::vector<std::future<void>> futures;
+
   futures.reserve(number_of_threads);
 
-  for (int i = 1; i <= number_of_threads; ++i)
+  for (std::size_t i = 1; i <= number_of_threads; ++i)
   {
-    futures.push_back(std::async(std::launch::deferred, lambda));
+    futures.push_back(std::async(std::launch::deferred, &doAsyncWork));
   }
 
   //run them
-  auto startForRB{std::chrono::high_resolution_clock::now()};
+  auto start { std::chrono::high_resolution_clock::now() };
 
-  for (auto&& it : futures)
+  for (auto&& future : futures)
   {
-    it.get();
+    future.get();
   }
 
-  auto endForRB{std::chrono::high_resolution_clock::now()};
-  auto timeUsedRB{endForRB - startForRB};
-  const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(timeUsedRB).count();
+  auto       end { std::chrono::high_resolution_clock::now() };
+  const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
   fmt::print("time used in range-based for loop: {} us\n", elapsed);
 }
 
-int main()
+int
+main()
 {
   fmt::print("Spawn async tasks\n");
   spawnAsync(10);

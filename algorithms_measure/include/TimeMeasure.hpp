@@ -36,7 +36,7 @@ runAndMeasure(std::string_view title, Callable callable)
   const auto end             = high_resolution_clock::now();
   const auto elapsed         = duration<double, duration_ratio>(end - start);
 
-  fmt::print("{:<15} : time: {:<10} ms, result: {:<10} \n", title, elapsed.count(), function_return);
+  fmt::print("|{:<15}|{:<10}|{:<10}|\n", title, elapsed.count(), function_return);
 }
 
 /**
@@ -61,7 +61,7 @@ public:
     const auto end             = high_resolution_clock::now();
     const auto elapsed         = duration<double, duration_ratio>(end - start);
 
-    fmt::print("{:<15} : time: {:<10} ms, result: {:<10} \n", m_title, elapsed.count(), function_return);
+    fmt::print("|{:<15}|{:<10}|{:<10}|\n", m_title, elapsed.count(), function_return);
   }
 
 private:
@@ -83,7 +83,7 @@ template <typename Callable>
 auto
 measure(const std::string_view title, Callable callable)
 {
-  return DecoratorTemplate<Callable>{ callable, title };  // To infer the type
+  return DecoratorTemplate<Callable> { callable, title };  // To infer the type
 };
 
 }  // namespace TimeMeasure

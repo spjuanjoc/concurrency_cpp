@@ -6,10 +6,8 @@
  */
 
 #include <fmt/color.h>
-#include <fmt/core.h>
-#include <fmt/ostream.h>
+#include <fmt/std.h>
 
-#include <algorithm>
 #include <chrono>
 #include <future>
 #include <random>
@@ -29,9 +27,9 @@ spawnAsyncTasks(uint32_t available_threads);
 std::string
 getShortThreadId()
 {
-  const auto thread_id    = std::this_thread::get_id();  // requires fmt/ostream.h
-  const auto formatted_id = fmt::format("{}", thread_id);
-  auto       short_id     = formatted_id.substr(formatted_id.size() - 5);
+  const auto& thread_id    = std::this_thread::get_id();  // requires fmt/std.h
+  const auto  formatted_id = fmt::format("{}", thread_id);
+  std::string short_id     = formatted_id.substr(formatted_id.size() - 5);
 
   return short_id;
 }
@@ -85,16 +83,15 @@ runTasks(std::vector<std::future<void>>& tasks)
 }
 
 std::vector<std::future<void>>
-spawnAsyncTasks(uint32_t available_threads)
+spawnAsyncTasks(std::uint32_t available_threads)
 {
   std::vector<std::future<void>> tasks;
-  auto                           task = [=]() { doAsyncWork(); };
 
   tasks.reserve(available_threads);
 
-  for (int i = 1; i <= available_threads; ++i)
+  for (std::size_t i = 1; i <= available_threads; ++i)
   {
-    tasks.emplace_back(std::async(std::launch::async | std::launch::deferred, task));
+    tasks.emplace_back(std::async(std::launch::async | std::launch::deferred, &doAsyncWork));
   }
 
   return tasks;
@@ -103,23 +100,23 @@ spawnAsyncTasks(uint32_t available_threads)
 int
 main()
 {
-  fmt::print("Spawn async colored: A collection of std::future\n");
+  fmt::println("Spawn async colored: A collection of std::future");
 
   const auto hardware_threads  = std::thread::hardware_concurrency();
   const auto available_threads = std::max<uint32_t>(1, hardware_threads - 1);
 
-  fmt::print("Threads available: {}\n", available_threads);
+  fmt::println("Threads available: {}", available_threads);
 
   auto tasks = spawnAsyncTasks(available_threads);
 
-  auto start{ std::chrono::high_resolution_clock::now() };
+  auto start { std::chrono::high_resolution_clock::now() };
   runTasks(tasks);
-  auto end{ std::chrono::high_resolution_clock::now() };
+  auto end { std::chrono::high_resolution_clock::now() };
 
   const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  fmt::print("Time used running the tasks: {} us\n", elapsed.count());
+  fmt::println("Time used running the tasks: {} us", elapsed.count());
 
-  fmt::print("End");
+  fmt::println("End");
 
   return 0;
 }

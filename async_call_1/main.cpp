@@ -1,35 +1,28 @@
-#include "fmt/ostream.h"
-#include <fmt/core.h>
+#include <fmt/std.h>
+
 #include <chrono>
 #include <future>
-#include <iostream>
 
 using namespace std::chrono_literals;
 std::promise<void> runner_timeout;
 
-void firstTask()
+void
+firstTask()
 {
   constexpr auto sleep_time = 5s;
-  fmt::print("First message, before sleep {}s {:^4} tid:{:<5}\n",
-             sleep_time.count(),
-             "",
-             std::this_thread::get_id());
+  fmt::print("First message, before sleep {}s {:^4} tid:{:<5}\n", sleep_time.count(), "", std::this_thread::get_id());
   std::this_thread::sleep_for(sleep_time);
-  fmt::print("Second message, after sleep {}s {:^4} tid:{}\n",
-             sleep_time.count(),
-             "",
-             std::this_thread::get_id());
+  fmt::print("Second message, after sleep {}s {:^4} tid:{}\n", sleep_time.count(), "", std::this_thread::get_id());
 }
 
-void called_from_async(std::promise<void> started)
+void
+called_from_async(std::promise<void> started)
 {
   constexpr auto sleep_time = 5s;
   constexpr auto timeout    = 5s;
-  bool           needs_to_continue{true};
+  bool           needs_to_continue { true };
 
-  fmt::print("Third message, before async call {}s tid:{}\n",
-             sleep_time.count(),
-             std::this_thread::get_id());
+  fmt::print("Third message, before async call {}s tid:{}\n", sleep_time.count(), std::this_thread::get_id());
   std::this_thread::sleep_for(sleep_time);
 
   auto abort_value = runner_timeout.get_future();
@@ -57,13 +50,15 @@ void called_from_async(std::promise<void> started)
   }
 }
 
-int main()
+int
+main()
 {
   //called_from_async launched in a separate thread if possible
-  std::promise<void> runnerStarted;
-  auto               runnerValue = runnerStarted.get_future();
+  std::promise<void> runner_started;
   std::future<void>  result;
-  result = std::async(std::launch::async, called_from_async, move(runnerStarted));
+  std::future<void>  runner_value = runner_started.get_future();
+
+  result = std::async(std::launch::async, called_from_async, std::move(runner_started));
 
   firstTask();
   fmt::print("after async\n");

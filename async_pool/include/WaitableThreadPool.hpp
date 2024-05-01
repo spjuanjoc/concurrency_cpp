@@ -1,11 +1,19 @@
-//
-// Created by juan.castellanos on 22/04/21.
-//
-#pragma once
+/**
+ * @brief
+ *
+ * @author  spjuanjoc
+ * @date    2021-04-22
+ */
 
-#include "fmt/core.h"
-#include "fmt/ostream.h"
+#ifndef WAITABLE_THREADPOOL_H
+#define WAITABLE_THREADPOOL_H
+
+#include <fmt/core.h>
+#include <fmt/ostream.h>
+#include <fmt/std.h>
+
 #include "ThreadPoolHelper.hpp"
+
 #include <atomic>
 #include <future>
 
@@ -15,10 +23,12 @@ namespace tpns
 class WaitableThreadPool
 {
 public:
-  WaitableThreadPool() : done_(false), joiner_(threads_)
+  WaitableThreadPool()
+  : done_(false)
+  , joiner_(threads_)
   {
     fmt::print("ctor\n");
-//    const std::uint32_t thread_count = std::max(2u, 1u);
+    //    const std::uint32_t thread_count = std::max(2u, 1u);
     const std::uint32_t thread_count = std::max(std::thread::hardware_concurrency() - 1, 1u);
 
     try
@@ -42,13 +52,12 @@ public:
     done_ = true;
   }
 
-  template<typename FunctionType>
-  std::future<typename std::result_of<FunctionType()>::type>
-  addToQueue(FunctionType task_function)
+  template <typename FunctionType>
+  std::future<typename std::result_of<FunctionType()>::type> addToQueue(FunctionType task_function)
   {
     fmt::print("Add to queue\n");
     using result_type = typename std::result_of<FunctionType()>::type;
-//    typedef typename std::result_of<FunctionType()>::type result_type;
+    //    typedef typename std::result_of<FunctionType()>::type result_type;
 
     std::packaged_task<result_type()> task(std::move(task_function));
     std::future<result_type>          result(task.get_future());
@@ -85,3 +94,5 @@ private:
 };
 
 }  // namespace tpns
+
+#endif  //WAITABLE_THREADPOOL_H

@@ -1,17 +1,21 @@
-//
-// Created by juan.castellanos on 21/04/21.
-//
-#pragma once
+/**
+* @brief
+*
+* @author  spjuanjoc
+* @date    2021-04-21
+*/
 
-#include "fmt/core.h"
-#include "fmt/ostream.h"
+#ifndef ASYNC_POOL_H
+#define ASYNC_POOL_H
+
+#include <fmt/std.h>
+
 #include <cstdint>
 #include <future>
 #include <queue>
 
 class IAsyncPool
 {
-
 };
 
 class AsyncPool : IAsyncPool
@@ -19,29 +23,29 @@ class AsyncPool : IAsyncPool
 public:
   using work_item_t = std::function<void(void)>;
 
-  explicit AsyncPool(std::uint32_t max_threads) : max_threads_(max_threads)
+  explicit AsyncPool(std::uint32_t max_threads)
+  : max_threads_(max_threads)
   {
     if (max_threads_ > std::thread::hardware_concurrency())
     {
-//      throw error?
+      //      throw error?
     }
-
   }
 
   virtual ~AsyncPool()
   {
     fmt::print("Finish\n");
     // Release ?
-//    for (auto&& it : vector_)
-//    {
-//      it.get();
-//    }
+    //    for (auto&& it : vector_)
+    //    {
+    //      it.get();
+    //    }
   }
 
-  AsyncPool(const AsyncPool&) = delete;
-  AsyncPool(AsyncPool&&)      = delete;
+  AsyncPool(const AsyncPool&)            = delete;
+  AsyncPool(AsyncPool&&)                 = delete;
   AsyncPool& operator=(const AsyncPool&) = delete;
-  AsyncPool& operator=(AsyncPool&&) = delete;
+  AsyncPool& operator=(AsyncPool&&)      = delete;
 
   void queueWork(const work_item_t& item)
   {
@@ -54,9 +58,12 @@ public:
   void run()
   {
     fmt::print("Run\n");
-    auto lambda_work_item = [this]() { doAsyncWork(); };
+    auto lambda_work_item = [this]()
+    {
+      doAsyncWork();
+    };
     std::promise<void> runner_started;
-    auto runnerValue = runner_started.get_future();
+    auto               runnerValue = runner_started.get_future();
 
     for (uint32_t i = 1; i <= max_threads_; ++i)
     {
@@ -84,16 +91,10 @@ public:
     }
   }
 
-  void stop()
-  {
-    stop_ = true;
-  }
+  void stop() { stop_ = true; }
 
 protected:
-  AsyncPool()
-  {
-    fmt::print("Init the pool\n");
-  };
+  AsyncPool() { fmt::print("Init the pool\n"); };
 
   void doAsyncWork()
   {
@@ -113,9 +114,11 @@ protected:
   }
 
 private:
-  std::uint32_t max_threads_{1};
-  std::queue<work_item_t> queue_;
+  std::uint32_t                  max_threads_ { 1 };
+  std::queue<work_item_t>        queue_;
   std::vector<std::future<void>> vector_;
-  bool stop_{false};
-  std::mutex mutex_;
+  bool                           stop_ { false };
+  std::mutex                     mutex_;
 };
+
+#endif  //ASYNC_POOL_H

@@ -16,8 +16,9 @@ AllowShortCaseLabelsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLambdasOnASingleLine: All
+AllowShortLambdasOnASingleLine: None
 AllowShortLoopsOnASingleLine: false
+#AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: TopLevel
 AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
@@ -65,10 +66,11 @@ SortIncludes: CaseSensitive
 SortUsingDeclarations: true
 SpaceAfterCStyleCast: true
 SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: true
 SpaceBeforeParens: ControlStatements
 SpaceBeforeInheritanceColon: true
-SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 2
+SpaceInEmptyParentheses: false
 SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInContainerLiterals: false

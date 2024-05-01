@@ -1,7 +1,12 @@
-//
-// Created by juan.castellanos on 24/01/20.
-//
-#pragma once
+/**
+ * @brief
+ *
+ * @author  spjuanjoc
+ * @date    2020-01-24
+ */
+
+#ifndef UNPROTECTED_MUTEX_H
+#define UNPROTECTED_MUTEX_H
 
 #include <mutex>
 #include <string>
@@ -18,30 +23,33 @@ public:
   };
 
 private:
-  std::int32_t value{};
-  std::string  name{"name"};
+  std::int32_t value {};
+  std::string  name { "name" };
 };
 
 class DataWrapper
 {
 public:
-  template<typename Function>
+  template <typename Function>
   void processData(Function func)
   {
-    std::lock_guard lock(mutex_);
+    std::lock_guard lock(m_mutex);
     fmt::print("Process data inside lock_guard\n");
-    func(data_);  // Pass “protected” data to user-supplied function, but it's not really protected
+    func(m_data);  // Pass “protected” data to user-supplied function, but it's not really protected
   }
 
 private:
-  SomeData   data_;
-  std::mutex mutex_;
+  SomeData   m_data;
+  std::mutex m_mutex;
 };
 
 SomeData* unprotected_data;
 
-void maliciousFunction(SomeData& protected_data)
+void
+maliciousFunction(SomeData& protected_data)
 {
   fmt::print("Malicious function. Data's not thread safe\n");
   unprotected_data = &protected_data;
 }
+
+#endif //

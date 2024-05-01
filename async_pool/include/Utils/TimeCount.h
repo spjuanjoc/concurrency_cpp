@@ -1,7 +1,12 @@
-//
-// Created by juan.castellanos on 23/04/21.
-//
-#pragma once
+/**
+ * @brief Defines time count utility functions.
+ *
+ * @author  spjuanjoc
+ * @date    2022-04-23
+ */
+
+#ifndef TIME_COUNT_H
+#define TIME_COUNT_H
 
 #include <chrono>
 
@@ -25,20 +30,26 @@ namespace Utils
  * Gets the now time with the max possible precision
  * @return The high resolution time point
  */
-high_res_time_point count()
+high_res_time_point
+count()
 {
   return high_resolution_clock::now();
 }
 
 /**
- * Calculates the elapsed microseconds since begin to end
- * @param begin The starting time point
- * @param end The ending time point
- * @return The microseconds elapsed
+ * Calculates the elapsed microseconds since begin to end.
+ *
+ * @param begin The starting time point.
+ * @param end   The ending time point.
+ *
+ * @return The elapsed microseconds.
  */
-auto elapsedTime(const high_res_time_point& begin, const high_res_time_point& end)
+auto
+elapsedTime(const high_res_time_point& begin, const high_res_time_point& end)
 {
   return duration_cast<milliseconds>(end - begin).count();
 }
 
 }  // namespace Utils
+
+#endif  //TIME_COUNT_H

@@ -1,14 +1,25 @@
 cmake_minimum_required(VERSION 3.19)
+
 project(spawn_async_colored
-  VERSION "0.0.3"
+  VERSION "0.0.4"
   DESCRIPTION "Example of running spawned async tasks with colored output"
   LANGUAGES CXX
 )
 
+
+# Options
+option(ENABLE_WERROR  "Treat compiler warnings as errors" False)
+
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 
-## Setup Conan
+## Compiler options
+include(../cmake/CompilerOptions.cmake)
+set_compiler_options(${PROJECT_NAME})
+
+
+## Setup Conan < 2.0
 if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
   file(DOWNLOAD
@@ -16,6 +27,7 @@ if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
     "${CMAKE_BINARY_DIR}/conan.cmake"
   )
 endif ()
+
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_cmake_autodetect(settings)
@@ -26,11 +38,25 @@ conan_cmake_run(CONANFILE ../conanfile.txt
   SETTINGS ${settings}
 )
 
+
 ## Find third-party packages
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_BINARY_DIR})
 find_package(fmt REQUIRED)
 
 
 ## Target
-target_link_libraries(${PROJECT_NAME} pthread fmt::fmt)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+## Target
+target_include_directories(${PROJECT_NAME}
+  SYSTEM PRIVATE # These directories must be placed before other non-system directories
+    ${fmt_INCLUDE_DIRS}
+#  PUBLIC
+#    include
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    pthread
+    ${fmt_LIBRARIES}
+)
+
