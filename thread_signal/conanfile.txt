@@ -1,0 +1,9 @@
+[requires]
+  fmt/11.2.0
+  libsigcpp/3.0.7
+
+[generators]
+  CMakeDeps
+
+[layout]
+  cmake_layout

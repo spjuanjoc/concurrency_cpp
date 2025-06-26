@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(async_call_3
-  VERSION "0.0.3"
+project(spawn_async_task_2
+  VERSION "1.0.0"
   DESCRIPTION ""
   LANGUAGES CXX)
+
 
 # Options
 option(ENABLE_WERROR  "Treat compiler warnings as errors" False)

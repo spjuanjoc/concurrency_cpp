@@ -55,7 +55,7 @@ Physical for parallelism.
 
 These projects use Conan to handle the dependencies.
 
-Conan version `1.62.0`
+Conan version `2.x`
 
 The libraries used include:
 
@@ -69,6 +69,6 @@ Inside any of the subprojects:
 
 ```shell
 mkdir build && cd build
-cmake -DCMAKE_MODULE_PATH=$PWD -DCMAKE_BUILD_TYPE=Debug -G "Ninja" ..
+cmake .. -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/path/to/cmake/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -G "Ninja"
 cmake --build .
 ```
