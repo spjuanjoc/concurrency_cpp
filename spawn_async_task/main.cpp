@@ -22,7 +22,7 @@ spawnAsync(std::uint32_t number_of_threads)
 
   for (std::size_t i = 1; i <= number_of_threads; ++i)
   {
-    futures.push_back(std::async(std::launch::deferred, &doAsyncWork));
+    futures.emplace_back(std::async(std::launch::deferred, &doAsyncWork));
   }
 
   //run them

@@ -91,27 +91,26 @@ doAsyncWork()
   fmt::print("Doing async work");
 }
 
-
 int
 main()
 {
   fmt::print("Shared futures spawn\n");
-  auto number = std::thread::hardware_concurrency();
-  auto m      = std::max<uint32_t>(1, number - 1);
-  fmt::print("Threads available: {}\n", m);
+  const auto number_of_threads = std::thread::hardware_concurrency();
+  const auto available_threads = std::max<uint32_t>(1, number_of_threads - 1);
+  fmt::print("Threads available: {}\n", available_threads);
 
   regularFutures();
   sharedFutures();
 
   {
-    std::thread t(doAsyncWork);  //thread-based
-    t.join();
+    std::thread thread_1(doAsyncWork);  //thread-based
+    thread_1.join();
   }
 
-  std::future<void> f = std::async(
+  std::future<void> future_1 = std::async(
     std::launch::async | std::launch::deferred,
     doAsyncWork);  //task-based is preferred to thread-based
-  f.get();
+  future_1.get();
 
   fmt::print("End");
 

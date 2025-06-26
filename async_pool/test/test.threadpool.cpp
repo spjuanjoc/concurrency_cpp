@@ -22,8 +22,8 @@ TEST_CASE("should accumulate using a waitable thread pool", "[thread pool][accum
   REQUIRE(1 == 1);
   std::optional<int> var;
 
-  std::vector<int> values;
-  uint32_t         number_of_values = 1000;
+  std::vector<int>   values;
+  constexpr uint32_t number_of_values = 1000;
   values.reserve(number_of_values);
 
   for (uint32_t i = 0; i < number_of_values; ++i)
