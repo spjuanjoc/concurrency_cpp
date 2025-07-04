@@ -5,8 +5,6 @@
  * @date   2020-01-24
  */
 
-#include <fmt/core.h>
-
 #include "TimeMeasure.hpp"
 
 #include <list>
@@ -26,16 +24,16 @@ main()
 
   auto measureAccumulate = [&values]
   {
-    const auto initial_value = 0.0;
+    constexpr auto initial_value = 0.0;
     return std::accumulate(values.begin(), values.end(), initial_value);
   };
   measure("std::accumulate", measureAccumulate)();
 
-  auto wasFound = [&values](double value)
+  auto wasFound = [&values](const double value)
   {
     const auto result = std::find(values.begin(), values.end(), value);
 
-    return !(result == std::end(values));
+    return result != std::end(values);
   };
 
   constexpr auto value_in_collection     = 0.5;

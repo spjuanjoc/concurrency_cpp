@@ -1,4 +1,3 @@
-#include <fmt/color.h>
 #include <fmt/core.h>
 
 #include <chrono>
@@ -17,9 +16,9 @@ using namespace std::chrono_literals;
 void
 regularFutures()
 {
-  vector<double> numbers = { 0, 1.1, 2.2, 3.3, 4.4, 5.5 };
+  const vector<double> numbers = { 0, 1.1, 2.2, 3.3, 4.4, 5.5 };
 
-  auto lambda = [=](double factor)
+  auto lambda = [=](const double factor)
   {
     double result = 0;
 
@@ -53,13 +52,13 @@ regularFutures()
 void
 sharedFutures()
 {
-  vector<double> numbers = { 0, 1.1, 2.2, 3.3, 4.4, 5.5 };
+  const vector<double> numbers = { 0, 1.1, 2.2, 3.3, 4.4, 5.5 };
 
-  auto lambda = [=](double factor)
+  auto lambda = [=](const double factor)
   {
     double result = 0;
 
-    for (const auto number : numbers)
+    for (const auto& number : numbers)
     {
       result += number * number * factor;
     }
