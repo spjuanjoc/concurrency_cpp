@@ -12,6 +12,7 @@
 #include <future>
 #include <random>
 #include <thread>
+#include <utility>
 #include <vector>
 
 using namespace std::chrono_literals;
@@ -34,12 +35,12 @@ getShortThreadId()
   return short_id;
 }
 
-template <typename Type>
-constexpr auto
-toUnderlyingType(Type enumerator) noexcept
-{
-  return static_cast<std::underlying_type_t<Type>>(enumerator);
-}
+// template <typename Type>
+// constexpr auto
+// toUnderlyingType(Type enumerator) noexcept
+// {
+//   return static_cast<std::underlying_type_t<Type>>(enumerator);
+// }
 
 template <typename Type>
 constexpr auto  // fmt::color
@@ -52,25 +53,25 @@ void
 doAsyncWork()
 {
   std::random_device                      random_device;
-  std::mt19937                            generator(random_device());
+  // std::mt19937                            generator(random_device());
   std::uniform_int_distribution<uint32_t> distribution(
-    toUnderlyingType(fmt::color::red),
-    toUnderlyingType(fmt::color::blue));
+    std::to_underlying(fmt::color::red),
+    std::to_underlying(fmt::color::blue));
 
-  const auto colors_distribution = distribution(generator);
+  const auto colors_distribution = distribution(random_device);
   const auto text_color          = toFmtColor(colors_distribution);
 
   fmt::print(
     fg(text_color),
-    "Doing async work for thread {}",
-    fmt::format(fmt::emphasis::bold, "{}\n", getShortThreadId()));
+    "Doing async work for thread {}\n",
+    fmt::format(fmt::emphasis::bold, "{}", getShortThreadId()));
 
   std::this_thread::sleep_for(TASK_SLEEP_TIME);  // The async work.
 
   fmt::print(
     fg(text_color),
-    "Async work done  for thread {}",
-    fmt::format(fmt::emphasis::bold, "{}\n", getShortThreadId()));
+    "Async work done  for thread {}\n",
+    fmt::format(fmt::emphasis::bold, "{}", getShortThreadId()));
 }
 
 void
